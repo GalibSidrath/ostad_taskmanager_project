@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanager/data/models/task_model.dart';
 import 'package:taskmanager/ui/utility/app_colors.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem({
     super.key,
+    required this.taskModel
   });
+  final TaskModel taskModel;
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +15,14 @@ class TaskItem extends StatelessWidget {
       elevation: 0,
       color: AppColors.white,
       child: ListTile(
-        title: Text('Title wii be here'),
+        title: Text(taskModel.title.toString()),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Despriction will be here'),
+            Text(taskModel.description.toString() ?? ''),
             Text(
-              '12/12/2024',
-              style: TextStyle(
+              taskModel.createdDate.toString() ?? '',
+              style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black),
             ),
@@ -27,13 +30,17 @@ class TaskItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Chip(
-                  label: Text('New'),
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  label: Text(taskModel.status ?? 'New'),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 ),
                 ButtonBar(
                   children: [
-                    IconButton(onPressed: (){}, icon: Icon(Icons.edit),),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.delete),)
+                    IconButton(
+                        onPressed: () {}, icon: const Icon(Icons.delete)),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
                   ],
                 )
               ],

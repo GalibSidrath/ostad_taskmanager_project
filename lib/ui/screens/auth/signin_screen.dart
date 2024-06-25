@@ -11,6 +11,7 @@ import 'package:taskmanager/ui/screens/main_bottom_navbar.dart';
 import 'package:taskmanager/ui/utility/app_colors.dart';
 import 'package:taskmanager/ui/utility/app_constants.dart';
 import 'package:taskmanager/ui/widgets/background_widget.dart';
+import 'package:taskmanager/ui/widgets/circuler_process_indicator.dart';
 import 'package:taskmanager/ui/widgets/snack_bar_message.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -89,7 +90,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: 16),
                     Visibility(
                       visible: _signInInProgress == false,
-                      replacement: const Center(child: CircularProgressIndicator(),),
+                      replacement: const CircleLoader(),
                       child: ElevatedButton(
                           onPressed: _onTapSignInButton,
                           child: const Icon(Icons.arrow_forward_ios)),
@@ -157,7 +158,8 @@ class _SignInScreenState extends State<SignInScreen> {
     if(mounted) setState(() {});
 
     if (response.isSuccess) {
-      LoginModel loginModel = LoginModel.fromJson(response.response!);
+      await AuthController.clearAllData();
+      LoginModel loginModel = LoginModel.fromJson(response.responseData!);
       await AuthController.saveUserAccessToken(loginModel.token.toString());
       await AuthController.saveUserData(loginModel.userModel!);
       if (mounted) {
