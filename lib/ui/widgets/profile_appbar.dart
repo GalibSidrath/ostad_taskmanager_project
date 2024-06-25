@@ -3,6 +3,7 @@ import 'package:taskmanager/ui/controllers/auth_controller.dart';
 import 'package:taskmanager/ui/screens/auth/signin_screen.dart';
 import 'package:taskmanager/ui/screens/update_profile_screen.dart';
 import 'package:taskmanager/ui/utility/app_colors.dart';
+import 'package:taskmanager/ui/utility/app_constants.dart';
 
 AppBar ProfileAppbar(context) {
   return AppBar(
@@ -49,7 +50,7 @@ AppBar ProfileAppbar(context) {
                 (route) => false,
           );
         },
-        icon: const Icon(Icons.logout),
+        icon: const Icon(Icons.logout, color: AppColors.white,),
       )
     ],
   );

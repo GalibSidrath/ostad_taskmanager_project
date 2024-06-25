@@ -6,6 +6,7 @@ import 'package:taskmanager/data/utilities/urls.dart';
 import 'package:taskmanager/ui/utility/app_colors.dart';
 import 'package:taskmanager/ui/utility/app_constants.dart';
 import 'package:taskmanager/ui/widgets/background_widget.dart';
+import 'package:taskmanager/ui/widgets/circuler_process_indicator.dart';
 import 'package:taskmanager/ui/widgets/snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -139,7 +140,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 16),
                     Visibility(
                       visible: _regInProgress == false,
-                      replacement: const Center(child: CircularProgressIndicator()),
+                      replacement: const CircleLoader(),
                       child: ElevatedButton(
                           onPressed: () {
                             if(_formkey.currentState!.validate()){
