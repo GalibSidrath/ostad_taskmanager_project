@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:taskmanager/data/models/network_response.dart';
 import 'package:taskmanager/data/models/task_list_wrapper_model.dart';
 import 'package:taskmanager/data/models/task_model.dart';
+import 'package:taskmanager/data/models/task_status_count_model.dart';
+import 'package:taskmanager/data/models/task_status_count_wrapper_model.dart';
 import 'package:taskmanager/data/network_caller/network_caller.dart';
 import 'package:taskmanager/data/utilities/urls.dart';
 import 'package:taskmanager/ui/screens/add_new_task_screen.dart';
@@ -21,13 +23,17 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getNewTaskInProcess = false;
+  bool _getTaskStatusByCountInProcess = false;
   List<TaskModel> newTaskList = [];
+  List<TaskStatusCountModel> taskCountByStutasList = [];
 
   @override
   void initState() {
     super.initState();
+    _getTaskStatusByCount();
     _getNewTask();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +50,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
+                  _getTaskStatusByCount();
                   _getNewTask();
                 },
                 child: Visibility(
@@ -52,7 +59,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                   child: ListView.builder(
                       itemCount: newTaskList.length,
                       itemBuilder: (context, index) {
-                        return TaskItem(taskModel: newTaskList[index],);
+                        return TaskItem(
+                          taskModel: newTaskList[index],
+                          onUpdateTask: () {
+                            _getTaskStatusByCount();
+                            _getNewTask();
+                          },
+                        );
                       }),
                 ),
               ),
@@ -69,17 +82,22 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     );
   }
 
-  SingleChildScrollView _buildSummaryCard() {
-    return const SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TaskSummaryCard(count: '15', title: 'New'),
-          TaskSummaryCard(count: '14', title: 'Completed'),
-          TaskSummaryCard(count: '154', title: 'Canceled'),
-          TaskSummaryCard(count: '1500', title: 'Progressed'),
-        ],
+  Widget _buildSummaryCard() {
+    return Visibility(
+      visible: _getTaskStatusByCountInProcess == false,
+      replacement: const SizedBox(
+        height: 100,
+        child: CircleLoader(),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: taskCountByStutasList.map((e) {
+            return TaskSummaryCard(
+                title: e.sId?.toUpperCase() ?? '', count: e.sum.toString());
+          }).toList(),
+        ),
       ),
     );
   }
@@ -103,13 +121,35 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       TaskListWrapperModel taskListWrapperModel =
           TaskListWrapperModel.fromJson(response.responseData);
       newTaskList = taskListWrapperModel.taskList ?? [];
-    }else{
+    } else {
       if (mounted) {
-        showSnackBarMessage(
-            context, response.errorMsg ?? 'Failed to get new Task list! Try again');
+        showSnackBarMessage(context,
+            response.errorMsg ?? 'Failed to get new Task list! Try again');
       }
     }
     _getNewTaskInProcess = false;
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _getTaskStatusByCount() async {
+    _getTaskStatusByCountInProcess = true;
+    if (mounted) setState(() {});
+
+    NetworkResponse response =
+        await NetworkCaller.getRequest(Urls.taskStatusCount);
+
+    if (response.isSuccess) {
+      TaskStatusCountWrapperModel taskStatusCountWrapperModelModel =
+          TaskStatusCountWrapperModel.fromJson(response.responseData);
+      taskCountByStutasList =
+          taskStatusCountWrapperModelModel.taskStatusList ?? [];
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context,
+            response.errorMsg ?? 'Failed to get task count! Try again');
+      }
+    }
+    _getTaskStatusByCountInProcess = false;
     if (mounted) setState(() {});
   }
 }

@@ -1,9 +1,12 @@
+import 'dart:convert';
+// import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:taskmanager/ui/controllers/auth_controller.dart';
 import 'package:taskmanager/ui/screens/auth/signin_screen.dart';
 import 'package:taskmanager/ui/screens/update_profile_screen.dart';
 import 'package:taskmanager/ui/utility/app_colors.dart';
-import 'package:taskmanager/ui/utility/app_constants.dart';
+// import 'package:taskmanager/ui/utility/app_constants.dart';
 
 AppBar ProfileAppbar(context) {
   return AppBar(
@@ -12,11 +15,14 @@ AppBar ProfileAppbar(context) {
       onTap: () {
         _onTapProfile(context);
       },
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: CircleAvatar(
-          child: Icon(Icons.person),
-          backgroundColor: AppColors.white,
+          // backgroundColor: AppColors.white,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(45),
+            child: profileImage(),
+          ),
         ),
       ),
     ),
@@ -54,6 +60,19 @@ AppBar ProfileAppbar(context) {
       )
     ],
   );
+}
+
+ Widget profileImage() {
+  if(AuthController.userData?.photo != null && AuthController.userData!.photo!.isNotEmpty) {
+    return Image.memory (
+      base64Decode(AuthController.userData?.photo ?? ''),
+      fit: BoxFit.fill,
+      height: 90,
+      width: 90,
+    );
+  }else{
+    return const Icon(Icons.person);
+  }
 }
 
 void _onTapProfile(context) {

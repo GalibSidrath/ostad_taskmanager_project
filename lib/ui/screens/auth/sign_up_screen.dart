@@ -62,7 +62,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                     TextFormField(
                       controller: _emailTEcontroller,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Email',
                       ),
                       validator: (String? value){
@@ -80,7 +80,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                     ),
                     TextFormField(
                       controller: _firstnameTEcontroller,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'First Name',
                       ),
                       validator: (value){
@@ -93,7 +93,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _lastnameTEcontroller,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Last Name',
                       ),
                       validator: (value){
@@ -106,8 +106,8 @@ class _SignInScreenState extends State<SignUpScreen> {
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _mobileTEcontroller,
-                      keyboardType: TextInputType.numberWithOptions(),
-                      decoration: InputDecoration(
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      decoration: const InputDecoration(
                         hintText: 'Mobile',
                       ),
                       validator: (value){
