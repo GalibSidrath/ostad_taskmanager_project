@@ -41,7 +41,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                       height: 100,
                     ),
                     Text(
-                      'Pin Verifiactiom',
+                      'Pin Verifiaction',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(
